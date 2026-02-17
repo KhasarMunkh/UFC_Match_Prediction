@@ -1,4 +1,4 @@
-﻿using MLexperiment.Common;
+using MLexperiment.Common;
 using MLexperiment.DataModels;
 using MLexperiment.Trainers;
 
@@ -36,16 +36,20 @@ namespace MLexperiment
                 new RandomForestTrainer(30, 800)
             };
 
-            trainers.ForEach(trainer => TrainEvaluatePredict(trainer, newSample));
+            trainers.ForEach(trainer => TrainEvaluatePredict(trainer, newSample, args));
         }
 
-        static void TrainEvaluatePredict(ITrainerBase trainer, UFCMatchData newSample)
+        static void TrainEvaluatePredict(ITrainerBase trainer, UFCMatchData newSample, string[] args)
         {
             Console.WriteLine("***************************************");
             Console.WriteLine($"Training with {trainer.Name}...");
             Console.WriteLine("***************************************");
 
-            trainer.Fit(Path.Combine("D:\\repos\\C#\\MLexperiment\\src\\Data\\large_dataset.csv"));
+            var datasetPath = args.Length > 0
+                ? args[0]
+                : Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Data", "large_dataset.csv");
+
+            trainer.Fit(datasetPath);
 
             var modelMetrics = trainer.Evaluate();
             trainer.PrintModelMetrics(modelMetrics);

@@ -115,7 +115,7 @@ namespace MLexperiment.Common
         
         public void PrintModelMetrics(BinaryClassificationMetrics modelMetrics)
         {
-            Console.WriteLine($"F1 Score: {modelMetrics.F1Score:P2})" +
+            Console.WriteLine($"F1 Score: {modelMetrics.F1Score:P2}" +
                               $"\nAccuracy : {modelMetrics.Accuracy:P2}" +
                               $"\nPositive Precision: {modelMetrics.PositivePrecision:P2}" +
                               $"\nNegative Precision: {modelMetrics.NegativePrecision:P2}" +
