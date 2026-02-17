@@ -1,5 +1,6 @@
 using MLexperiment.Common;
 using MLexperiment.DataModels;
+using MLexperiment.Predictors;
 using MLexperiment.Trainers;
 
 namespace MLexperiment
@@ -54,8 +55,9 @@ namespace MLexperiment
             var modelMetrics = trainer.Evaluate();
             trainer.PrintModelMetrics(modelMetrics);
             trainer.Save();
+            Console.WriteLine($"Model saved to: {trainer.ModelPath}");
 
-            var predictor = new Predictor();
+            var predictor = new Predictor(trainer.ModelPath);
             var prediction = predictor.Predict(newSample);
             Console.WriteLine("----------------------------------------");
             Console.WriteLine($"Prediction for {newSample.R_fighter} vs {newSample.B_fighter}: " +

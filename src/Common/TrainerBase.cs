@@ -14,7 +14,8 @@ namespace MLexperiment.Common
     public abstract class TrainerBase<TParameters> : ITrainerBase where TParameters : class
     {
         public string Name { get; protected set; } = string.Empty;
-        protected static string ModelPath => Path.Combine(AppContext.BaseDirectory, "classification.mdl");
+        public string ModelPath => Path.Combine(AppContext.BaseDirectory, GenerateModelFileName());
+
         protected readonly MLContext _mlContext;
         protected DataOperationsCatalog.TrainTestData? _dataSplit;
         protected ITrainerEstimator<BinaryPredictionTransformer<TParameters>, TParameters> _model = null!;
@@ -112,7 +113,30 @@ namespace MLexperiment.Common
             // Split the data into training and test sets
             return _mlContext.Data.TrainTestSplit(dataView, testFraction: 0.3);
         }
-        
+
+        /// <summary>
+        /// Generates a unique model filename from the trainer Name.
+        /// e.g. "Random Forest (32 leaves, 200 trees)" -> "rf_32leaves_200trees.mdl"
+        /// </summary>
+        private string GenerateModelFileName()
+        {
+            var sanitized = Name.ToLowerInvariant()
+                .Replace("random forest", "rf")
+                .Replace("(", "")
+                .Replace(")", "")
+                .Replace(",", "")
+                .Replace(" ", "_")
+                .Trim('_');
+
+            // Collapse repeated underscores
+            while (sanitized.Contains("__"))
+            {
+                sanitized = sanitized.Replace("__", "_");
+            }
+
+            return $"{sanitized}.mdl";
+        }
+
         public void PrintModelMetrics(BinaryClassificationMetrics modelMetrics)
         {
             Console.WriteLine($"F1 Score: {modelMetrics.F1Score:P2}" +

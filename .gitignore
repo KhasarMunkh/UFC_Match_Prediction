@@ -27,4 +27,5 @@ obj/
 *.dll
 *.csv
 *.md
+*.txt
 *.png
